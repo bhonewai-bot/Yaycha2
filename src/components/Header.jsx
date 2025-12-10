@@ -5,10 +5,11 @@ import {
     Menu as MenuIcon,
     Add as AddIcon,
     LightMode as LightModeIcon,
+    DarkMode as DarkModeIcon
 } from "@mui/icons-material";
 
 export function Header() {
-    const { showForm, setShowForm } = useApp();
+    const { showForm, setShowForm, mode, setMode, setShowDrawer } = useApp();
 
     return (
         <AppBar position={"static"}>
@@ -16,6 +17,7 @@ export function Header() {
                 <IconButton
                     color={"inherit"}
                     edge={"start"}
+                    onClick={() => setShowDrawer(true)}
                 >
                     <MenuIcon />
                 </IconButton>
@@ -28,12 +30,23 @@ export function Header() {
                     >
                         <AddIcon />
                     </IconButton>
-                    <IconButton
-                        color={"inherit"}
-                        edge={"end"}
-                    >
-                        <LightModeIcon />
-                    </IconButton>
+                    {mode === "dark" ? (
+                        <IconButton
+                            color={"inherit"}
+                            edge={"end"}
+                            onClick={() => setMode("light")}
+                        >
+                            <LightModeIcon />
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            color={"inherit"}
+                            edge={"end"}
+                            onClick={() => setMode("dark")}
+                        >
+                            <DarkModeIcon />
+                        </IconButton>
+                    )}
                 </Box>
             </Toolbar>
         </AppBar>

@@ -12,15 +12,17 @@ export default function App() {
         { id: 3, name: "Albion", content: "Medieval fantasy MMORPG" },
     ]);
 
-    const { showForm } = useApp();
+    const { showForm, setGlobalMsg } = useApp();
 
     const remove = (id) => {
         setData(data.filter(item => item.id !== id));
+        setGlobalMsg("An item deleted");
     }
 
     const add = (name, content) => {
         const id = data[data.length - 1] + 1;
-        setData([...data, { id, name: name, content: content }])
+        setData([...data, { id, name: name, content: content }]);
+        setGlobalMsg("An item added");
     };
 
     return (
