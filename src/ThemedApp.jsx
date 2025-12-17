@@ -10,6 +10,7 @@ import {Register} from "./pages/Register.jsx";
 import {Profile} from "./pages/Profile.jsx";
 import {Comments} from "./pages/Comments.jsx";
 import {Likes} from "./pages/Likes.jsx";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 const AppContext = createContext();
 
@@ -48,7 +49,9 @@ const router = createBrowserRouter([
             },
         ]
     }
-])
+]);
+
+export const queryClient = new QueryClient();
 
 export default function ThemedApp() {
     const [mode, setMode] = useState("dark");
@@ -73,7 +76,9 @@ export default function ThemedApp() {
     return (
         <ThemeProvider theme={theme}>
             <AppContext.Provider value={{ showForm, setShowForm, mode, setMode, auth, setAuth, showDrawer, setShowDrawer, globalMsg, setGlobalMsg }}>
-                <RouterProvider router={router} />
+                <QueryClientProvider client={queryClient}>
+                    <RouterProvider router={router} />
+                </QueryClientProvider>
                 <CssBaseline />
             </AppContext.Provider>
         </ThemeProvider>

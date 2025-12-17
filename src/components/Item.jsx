@@ -7,15 +7,21 @@ import {Box, Card, CardContent, IconButton, Typography} from "@mui/material";
 import {green} from "@mui/material/colors";
 import {useNavigate} from "react-router-dom";
 
-export function Item({ item, remove, primary }) {
+import { formatRelative } from "date-fns";
+
+export function Item({ item, remove, primary, comment }) {
     const navigate = useNavigate();
 
     return (
         <Card sx={{ mb: 2 }}>
             {primary && <Box sx={{ height: 50, bgcolor: green[500] }} />}
-            <CardContent onClick={() => navigate("/comments/1")}>
+            <CardContent onClick={() => {
+                if (comment) return false;
+                navigate(`/comments/${item.id}`);
+            }}>
                 <Box
                     sx={{
+                        cursor: "pointer",
                         display: "flex",
                         flexDirection: "row",
                         justifyContent: "space-between",
@@ -34,7 +40,7 @@ export function Item({ item, remove, primary }) {
                             variant="caption"
                             sx={{ color: green[500] }}
                         >
-                            A few second ago
+                            {formatRelative(item.created, new Date())}
                         </Typography>
                     </Box>
                     <IconButton
@@ -60,7 +66,7 @@ export function Item({ item, remove, primary }) {
                     }}
                 >
                     <UserIcon fontSize={"10"} color={"info"} />
-                    <Typography variant={"caption"}>{item.name}</Typography>
+                    <Typography variant={"caption"}>{item.user.name}</Typography>
                 </Box>
             </CardContent>
         </Card>
