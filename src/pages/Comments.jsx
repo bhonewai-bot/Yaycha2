@@ -96,26 +96,6 @@ export function Comments() {
                 />
             ))}
 
-            <Item
-                key={2}
-                item={{
-                    id: 2,
-                    content: "Initial post content from Boo",
-                    name: "Boo",
-                }}
-                remove={() => {}}
-            />
-
-            <Item
-                key={3}
-                item={{
-                    id: 3,
-                    content: "A comment reply from Bhone Wai",
-                    name: "Bhone Wai",
-                }}
-                remove={() => {}}
-            />
-
             {auth && (
                 <form
                     onSubmit={e => {

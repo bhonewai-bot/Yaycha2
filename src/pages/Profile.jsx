@@ -7,10 +7,10 @@ import {fetchUser} from "../libs/fetcher.js";
 export function Profile() {
     const { id } = useParams();
 
-    const { data, isLoading, isError, error } = useQuery(
-        `users/${id}`,
-        async () => fetchUser(id)
-    );
+    const { data, isLoading, isError, error } = useQuery({
+        queryKey: ["users", id],
+        queryFn: async () => fetchUser(id)
+    });
 
     if (isError) {
         return (
