@@ -1,4 +1,4 @@
-import {createContext, useContext, useMemo, useState} from "react";
+import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 import {deepPurple, grey} from "@mui/material/colors";
 import Template from "./Template.jsx";
@@ -11,6 +11,7 @@ import {Profile} from "./pages/Profile.jsx";
 import {Comments} from "./pages/Comments.jsx";
 import {Likes} from "./pages/Likes.jsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import {fetchVerify} from "./libs/fetcher.js";
 
 const AppContext = createContext();
 
@@ -72,6 +73,12 @@ export default function ThemedApp() {
             },
         });
     }, [mode]);
+
+    useEffect(() => {
+        fetchVerify().then(user => {
+            if (user) setAuth(user);
+        });
+    }, []);
 
     return (
         <ThemeProvider theme={theme}>

@@ -1,8 +1,31 @@
-import {Avatar, Box, Typography} from "@mui/material";
+import {Alert, Avatar, Box, Typography} from "@mui/material";
 import {pink} from "@mui/material/colors";
-import {Item} from "../components/Item.jsx";
+import {useParams} from "react-router-dom";
+import {useQuery} from "@tanstack/react-query";
+import {fetchUser} from "../libs/fetcher.js";
 
 export function Profile() {
+    const { id } = useParams();
+
+    const { data, isLoading, isError, error } = useQuery(
+        `users/${id}`,
+        async () => fetchUser(id)
+    );
+
+    if (isError) {
+        return (
+            <Box>
+                <Alert severity={"warning"}>{error.message}</Alert>
+            </Box>
+        );
+    }
+
+    if (isLoading) {
+        return (
+            <Box sx={{ textAlign: "center" }} >Loading...</Box>
+        )
+    }
+
     return (
         <Box>
             <Box sx={{ bgcolor: "banner", height: 150, borderRadius: 4 }}></Box>
@@ -20,22 +43,12 @@ export function Profile() {
                 <Avatar sx={{ width: 100, height: 100, bgcolor: pink[500] }} />
 
                 <Box sx={{ textAlign: "center" }}>
-                    <Typography>Alice</Typography>
+                    <Typography>{data.name}</Typography>
                     <Typography sx={{ fontSize: "0.8em", color: "text.fade" }}>
-                        Bhone's profile bio content here
+                        {data.bio}
                     </Typography>
                 </Box>
             </Box>
-
-            <Item
-                key={1}
-                remove={() => {}}
-                item={{
-                    id: 1,
-                    content: "A post content from Bhone",
-                    name: "Bhone Wai",
-                }}
-            />
         </Box>
     )
 }

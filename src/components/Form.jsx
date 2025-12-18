@@ -10,7 +10,7 @@ export function Form({ add }) {
                 e.preventDefault();
                 const content = contentRef.current.value;
 
-                add("Bhone Wai", content);
+                add.mutate(content);
                 e.currentTarget.reset();
             }}
         >
