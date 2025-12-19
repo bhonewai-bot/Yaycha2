@@ -143,3 +143,63 @@ export async function deleteComment(id) {
 
     return res.text();
 }
+
+export async function postPostLike(id) {
+    const token = getToken();
+    const res = await fetch(`${api}/content/like/posts/${id}`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (res.ok) return res.json();
+}
+
+export async function postCommentLike(id) {
+    const token = getToken();
+    const res = await fetch(`${api}/content/like/comments/${id}`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (res.ok) return res.json();
+}
+
+export async function deletePostLike(id) {
+    const token = getToken();
+    const res = await fetch(`${api}/content/unlike/posts/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (res.ok) return res.json();
+}
+
+export async function deleteCommentLike(id) {
+    const token = getToken();
+    const res = await fetch(`${api}/content/unlike/comments/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (res.ok) return res.json();
+}
+
+export async function fetchPostLikes(id) {
+    const res = await fetch(`${api}/content/likes/posts/${id}`);
+
+    if (res.ok) return res.json();
+}
+
+export async function fetchCommentLikes(id) {
+    const res = await fetch(`${api}/content/likes/comments/${id}`);
+
+    if (res.ok) return res.json();
+}
