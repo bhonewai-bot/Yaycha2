@@ -8,9 +8,16 @@ import {green} from "@mui/material/colors";
 import {useNavigate} from "react-router-dom";
 
 import { formatRelative } from "date-fns";
+import {useApp} from "../ThemedApp.jsx";
 
-export function Item({ item, remove, primary, comment }) {
+export function Item({ item, remove, primary, comment, owner }) {
     const navigate = useNavigate();
+    const { auth } = useApp();
+
+    function isOwner() {
+        if (!auth) return false;
+        return auth.id == item.userId || auth.id == owner;
+    }
 
     return (
         <Card sx={{ mb: 2 }}>
@@ -43,16 +50,19 @@ export function Item({ item, remove, primary, comment }) {
                             {formatRelative(item.created, new Date())}
                         </Typography>
                     </Box>
-                    <IconButton
-                        sx={{ color: "text.fade" }}
-                        size={"small"}
-                        onClick={(e) => {
-                            remove(item.id);
-                            e.stopPropagation();
-                        }}
-                    >
-                        <DeleteIcon color={"inherit"} fontSize={"inherit"} />
-                    </IconButton>
+
+                    {isOwner() && (
+                        <IconButton
+                            sx={{ color: "text.fade" }}
+                            size={"small"}
+                            onClick={(e) => {
+                                remove(item.id);
+                                e.stopPropagation();
+                            }}
+                        >
+                            <DeleteIcon color={"inherit"} fontSize={"inherit"} />
+                        </IconButton>
+                    )}
                 </Box>
 
                 <Typography sx={{ my: 3 }}>{item.content}</Typography>

@@ -91,6 +91,18 @@ export async function postPost(content) {
     throw new Error("Error: Check Network Log");
 }
 
+export async function deletePost(id) {
+    const token = getToken();
+    const res = await fetch(`${api}/content/posts/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    return res.text();
+}
+
 export async function fetchComments(id) {
     const token = getToken();
     const res = await fetch(`${api}/content/posts/${id}`, {
@@ -118,4 +130,16 @@ export async function postComment(content, postId) {
     }
 
     throw new Error("Error: Check Network Log");
+}
+
+export async function deleteComment(id) {
+    const token = getToken();
+    const res = await fetch(`${api}/content/comments/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    return res.text();
 }

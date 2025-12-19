@@ -3,9 +3,7 @@ import {queryClient, useApp} from "../ThemedApp.jsx";
 import {Form} from "../components/Form.jsx";
 import {Item} from "../components/Item.jsx";
 import {useMutation, useQuery} from "@tanstack/react-query";
-import {fetchPosts, postPost} from "../libs/fetcher.js";
-
-const api = import.meta.env.VITE_API;
+import {deletePost, fetchPosts, postPost} from "../libs/fetcher.js";
 
 export function Home() {
     const { auth, showForm, setGlobalMsg } = useApp();
@@ -24,11 +22,7 @@ export function Home() {
     });
 
     const remove = useMutation({
-        mutationFn: async (id) => {
-            await fetch(`${api}/content/posts/${id}`, {
-                method: "DELETE",
-            });
-        },
+        mutationFn: async (id) => deletePost(id),
         onMutate: async (id) => {
             await queryClient.cancelQueries({ queryKey: ["posts"] });
             queryClient.setQueryData(["posts"], (old) =>

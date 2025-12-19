@@ -3,10 +3,8 @@ import {Item} from "../components/Item.jsx";
 import {useMutation, useQuery} from "@tanstack/react-query";
 import {useNavigate, useParams} from "react-router-dom";
 import {queryClient, useApp} from "../ThemedApp.jsx";
-import {fetchComments, postComment} from "../libs/fetcher.js";
+import {deleteComment, deletePost, fetchComments, postComment} from "../libs/fetcher.js";
 import {useRef} from "react";
-
-const api = import.meta.env.VITE_API;
 
 export function Comments() {
     const { id } = useParams();
@@ -14,31 +12,18 @@ export function Comments() {
 
     const { auth, setGlobalMsg } = useApp();
 
+    const contentInput = useRef();
+
     const { data, isLoading, isError, error } = useQuery({
         queryKey: ["comments", id],
         queryFn: async () => fetchComments(id)
     });
 
-    console.log(data);
-
-    const contentInput = useRef();
-
-    const removePost = useMutation({
-        mutationFn: async (id) => {
-            await fetch(`${api}/content/posts/${id}`, {
-                method: "DELETE"
-            });
-
-            navigate("/");
-            setGlobalMsg("A post deleted");
-        }
-    });
-
     const addComment = useMutation({
         mutationFn: async (content) => postComment(content, id),
         onSuccess: async (comment) => {
-            await queryClient.cancelQueries({ queryKey: ["comments"] });
-            queryClient.setQueryData(["comments"], (old) => {
+            await queryClient.cancelQueries({ queryKey: ["comments", id] });
+            queryClient.setQueryData(["comments", id], (old) => {
                 return {
                     ...old,
                     comments: [...old.comments, comment]
@@ -48,20 +33,19 @@ export function Comments() {
         }
     });
 
+    const removePost = useMutation({
+        mutationFn: async (id) => deletePost(id),
+        onSuccess: async () => {
+            await queryClient.refetchQueries({ queryKey: ["posts"] });
+            navigate("/");
+            setGlobalMsg("A post deleted");
+        }
+    });
+
     const removeComment = useMutation({
-        mutationFn: async (id) => {
-            await fetch(`${api}/content/comments/${id}`, {
-                method: "DELETE"
-            });
-        },
-        onMutate: async (id) => {
-            await queryClient.cancelQueries({ queryKey: ["comments"] });
-            queryClient.setQueryData(["comments"], (old) => {
-                return {
-                    ...old,
-                    comments: old.comments.filter(comment => comment.id !== id)
-                };
-            });
+        mutationFn: async (id) => deleteComment(id),
+        onSuccess: async () => {
+            await queryClient.refetchQueries({ queryKey: ["comments", id] });
             setGlobalMsg("A comment deleted");
         }
     });
@@ -93,6 +77,7 @@ export function Comments() {
                     key={comment.id}
                     item={comment}
                     remove={removeComment.mutate}
+                    owner={data.userId}
                 />
             ))}
 
