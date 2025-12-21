@@ -1,5 +1,5 @@
 import {useApp} from "../ThemedApp.jsx";
-import {AppBar, Box, IconButton, Toolbar, Typography} from "@mui/material";
+import {AppBar, Box, IconButton, Toolbar, Typography, Badge} from "@mui/material";
 
 import {
     Menu as MenuIcon,
@@ -7,23 +7,50 @@ import {
     LightMode as LightModeIcon,
     DarkMode as DarkModeIcon,
     Search as SearchIcon,
+    Notifications as NotiIcon,
+    ArrowBack as BackIcon
 } from "@mui/icons-material";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useQuery} from "@tanstack/react-query";
+import {fetchNotis} from "../libs/fetcher.js";
 
 export function Header() {
     const { auth, showForm, setShowForm, mode, setMode, setShowDrawer } = useApp();
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+
+    const { data, isLoading, isError } = useQuery({
+        queryKey: ["notis", auth],
+        queryFn: fetchNotis
+    });
+
+    function notiCount() {
+        if (!auth) return 0;
+        if (isLoading || isError) return 0;
+
+        return data.filter(noti => !noti.read).length;
+    }
 
     return (
         <AppBar position={"static"}>
             <Toolbar>
-                <IconButton
-                    color={"inherit"}
-                    edge={"start"}
-                    onClick={() => setShowDrawer(true)}
-                >
-                    <MenuIcon />
-                </IconButton>
+                {pathname === "/" ? (
+                    <IconButton
+                        color={"inherit"}
+                        edge={"start"}
+                        onClick={() => setShowDrawer(true)}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                ) : (
+                    <IconButton
+                        color={"inherit"}
+                        edge={"start"}
+                        onClick={() => navigate(-1)}
+                    >
+                        <BackIcon />
+                    </IconButton>
+                )}
 
                 <Typography sx={{ flexGrow: 1, ml: 2 }}>Yaycha</Typography>
 
@@ -31,17 +58,32 @@ export function Header() {
                     {auth && (
                         <IconButton
                             color="inherit"
-                            onClick={() => navigate("/search")}
+                            onClick={() => setShowForm(!showForm)}
                         >
-                            <SearchIcon />
+                            <AddIcon />
                         </IconButton>
                     )}
+
                     <IconButton
                         color="inherit"
-                        onClick={() => setShowForm(!showForm)}
+                        onClick={() => navigate("/search")}
                     >
-                        <AddIcon />
+                        <SearchIcon />
                     </IconButton>
+
+                    {auth && (
+                        <IconButton
+                            color="inherit"
+                            onClick={() => navigate("/notis")}
+                        >
+                            <Badge
+                                color="error"
+                                badgeContent={notiCount()}
+                            >
+                                <NotiIcon />
+                            </Badge>
+                        </IconButton>
+                    )}
 
                     {mode === "dark" ? (
                         <IconButton

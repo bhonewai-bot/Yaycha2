@@ -13,6 +13,8 @@ import {Likes} from "./pages/Likes.jsx";
 import {Search} from "./pages/Search.jsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {fetchVerify} from "./libs/fetcher.js";
+import {Notis} from "./pages/Notis.jsx";
+import {AppSocket} from "./AppSocket.jsx";
 
 const AppContext = createContext();
 
@@ -53,6 +55,10 @@ const router = createBrowserRouter([
                 path: "/search",
                 element: <Search />
             },
+            {
+                path: "/notis",
+                element: <Notis />
+            },
         ]
     }
 ]);
@@ -90,6 +96,7 @@ export default function ThemedApp() {
             <AppContext.Provider value={{ showForm, setShowForm, mode, setMode, auth, setAuth, showDrawer, setShowDrawer, globalMsg, setGlobalMsg }}>
                 <QueryClientProvider client={queryClient}>
                     <RouterProvider router={router} />
+                    <AppSocket />
                 </QueryClientProvider>
                 <CssBaseline />
             </AppContext.Provider>
