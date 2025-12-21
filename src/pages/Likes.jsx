@@ -1,5 +1,5 @@
 import {Alert, Box} from "@mui/material";
-import {UserList} from "./UserList.jsx";
+import {UserList} from "../components/UserList.jsx";
 import {useParams} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 import {fetchCommentLikes, fetchPostLikes} from "../libs/fetcher.js";

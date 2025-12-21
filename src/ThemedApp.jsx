@@ -10,6 +10,7 @@ import {Register} from "./pages/Register.jsx";
 import {Profile} from "./pages/Profile.jsx";
 import {Comments} from "./pages/Comments.jsx";
 import {Likes} from "./pages/Likes.jsx";
+import {Search} from "./pages/Search.jsx";
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import {fetchVerify} from "./libs/fetcher.js";
 
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
             {
                 path: "/likes/:id/:type",
                 element: <Likes />
+            },
+            {
+                path: "/search",
+                element: <Search />
             },
         ]
     }

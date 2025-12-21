@@ -203,3 +203,43 @@ export async function fetchCommentLikes(id) {
 
     if (res.ok) return res.json();
 }
+
+export async function postFollow(id) {
+    const token = getToken();
+    const res = await fetch(`${api}/follow/${id}`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (res.ok) return res.json();
+}
+
+export async function deleteFollow(id) {
+    const token = getToken();
+    const res = await fetch(`${api}/unfollow/${id}`, {
+        method: "DELETE",
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (res.ok) return res.json();
+}
+
+export async function fetchSearch(q) {
+    const res = await fetch(`${api}/search?q=${q}`);
+    return res.json();
+}
+
+export async function fetchFollowingPosts() {
+    const token = getToken();
+    const res = await fetch(`${api}/content/following/posts`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+
+    if (res.ok) return res.json();
+}
