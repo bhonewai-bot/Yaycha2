@@ -46,7 +46,7 @@ export function Header() {
                     <IconButton
                         color={"inherit"}
                         edge={"start"}
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate('/')}
                     >
                         <BackIcon />
                     </IconButton>

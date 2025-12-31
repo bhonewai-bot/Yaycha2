@@ -269,7 +269,7 @@ export async function putAllNotisRead() {
 
 export async function putNotiRead(id) {
     const token = getToken();
-    const res = await fetch(`${api}/content/notis/${id}`, {
+    const res = await fetch(`${api}/content/notis/read/${id}`, {
         method: "PUT",
         headers: {
             Authorization: `Bearer ${token}`,
